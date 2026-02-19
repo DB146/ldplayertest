@@ -23,7 +23,6 @@ jobs:
 
       - name: Build APKs from list
         run: |
-          # Create a directory to store the outputs
           mkdir -p generated_apks
           
           # Read the packages.txt file line by line
@@ -34,18 +33,17 @@ jobs:
             echo "Building app for package: $package_name"
             
             # Run Gradle build
-            # We pass -PcustomPackage to set applicationId
-            # We pass -PcustomName to set the app label
+            # IMPORTANT: Added < /dev/null to prevent Gradle from consuming the loop input
             ./gradlew app:assembleDebug \
               -PcustomPackage="$package_name" \
-              -PcustomName="$package_name"
+              -PcustomName="$package_name" < /dev/null
             
-            # Move and rename the APK to the output folder
-            # Assuming standard output path
+            # Move and rename the APK
             mv app/build/outputs/apk/debug/app-debug.apk "generated_apks/${package_name}.apk"
             
-            # Clean only the build output to ensure next build picks up changes
-            ./gradlew app:clean
+            # Clean build output
+            # IMPORTANT: Added < /dev/null here as well
+            ./gradlew app:clean < /dev/null
             
           done < packages.txt
 
