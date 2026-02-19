@@ -1,0 +1,4 @@
+com.myapp.alpha
+com.myapp.beta
+net.testing.charlie
+org.example.delta
